@@ -93,7 +93,48 @@ func (node *Node) onEvent(msgType int, msg []byte) error {
 	if msgType != websocket.TextMessage {
 		return errUnknownPayload
 	}
+
+	m := message{}
+	err := json.Unmarshal(msg, &m)
+	if err != nil {
+		return err
+	}
+
+	switch m.Op {
+	case opPlayerUpdate:
+		// todo
+	case opEvent:
+		// todo
+	default:
+		return errUnknownPayload
+	}
+
 	return nil
+}
+
+// CreatePlayer creates an audio player on this node
+func (node *Node) CreatePlayer(guildID string, sessionID string, event VoiceServerUpdate) (*Player, error) {
+	msg := message{
+		Op:        opVoiceUpdate,
+		GuildID:   guildID,
+		SessionID: sessionID,
+		Event:     &event,
+	}
+	data, err := json.Marshal(msg)
+	if err != nil {
+		return nil, err
+	}
+	err = node.wsConn.WriteMessage(websocket.TextMessage, data)
+	if err != nil {
+		return nil, err
+	}
+	player := &Player{
+		guildID: guildID,
+		manager: node.manager,
+		node:    node,
+	}
+	node.manager.players[guildID] = player
+	return player, nil
 }
 
 // LoadTracks queries lavalink to return a Tracks object

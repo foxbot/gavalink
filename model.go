@@ -51,3 +51,46 @@ type TrackInfo struct {
 	Length     int    `json:"length"`
 	Position   int    `json:"position"`
 }
+
+const (
+	opVoiceUpdate  = "voiceUpdate"
+	opPlay         = "play"
+	opStop         = "stop"
+	opPause        = "pause"
+	opSeek         = "seek"
+	opVolume       = "volume"
+	opDestroy      = "destroy"
+	opPlayerUpdate = "playerUpdate"
+	opEvent        = "event"
+)
+
+type message struct {
+	Op          string             `json:"op"`
+	GuildID     string             `json:"guildId,omitempty"`
+	SessionID   string             `json:"sessionId,omitempty"`
+	Event       *VoiceServerUpdate `json:"event,omitempty"`
+	Track       string             `json:"track,omitempty"`
+	StartTime   string             `json:"startTime,omitempty"`
+	EndTime     string             `json:"endTime,omitempty"`
+	Pause       bool               `json:"pause,omitempty"`
+	Position    int                `json:"position,omitempty"`
+	Volume      int                `json:"volume,omitempty"`
+	State       *state             `json:"state,omitempty"`
+	Type        string             `json:"type,omitempty"`
+	Reason      string             `json:"reason,omitempty"`
+	Error       string             `json:"error,omitempty"`
+	ThresholdMs int                `json:"thresholdMs,omitempty"`
+	// TODO: stats
+}
+
+type state struct {
+	Time     int `json:"time"`
+	Position int `json:"position"`
+}
+
+// VoiceServerUpdate is a raw Discord VOICE_SERVER_UPDATE event
+type VoiceServerUpdate struct {
+	GuildID  int    `json:"guild_id"`
+	Endpoint string `json:"endpoint"`
+	Token    string `json:"token"`
+}

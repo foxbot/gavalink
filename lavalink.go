@@ -11,14 +11,17 @@ type Lavalink struct {
 	// UserID is the Discord User ID of the bot
 	UserID int
 
-	nodes []Node
+	nodes   []Node
+	players map[string]*Player
 }
 
 var (
-	errNoNodes        = errors.New("No nodes present")
-	errNodeNotFound   = errors.New("Couldn't find that node")
-	errInvalidVersion = errors.New("This library requires Lavalink >= 3")
-	errUnknownPayload = errors.New("Lavalink sent an unknown payload")
+	errNoNodes          = errors.New("No nodes present")
+	errNodeNotFound     = errors.New("Couldn't find that node")
+	errPlayerNotFound   = errors.New("Couldn't find a player for that guild")
+	errVolumeOutOfRange = errors.New("Volume is out of range, must be within [0, 1000]")
+	errInvalidVersion   = errors.New("This library requires Lavalink >= 3")
+	errUnknownPayload   = errors.New("Lavalink sent an unknown payload")
 )
 
 // NewLavalink creates a new Lavalink manager
@@ -73,4 +76,13 @@ func (lavalink *Lavalink) BestNode() (*Node, error) {
 	}
 	// TODO: lookup latency
 	return &lavalink.nodes[0], nil
+}
+
+// GetPlayer gets a player for a guild
+func (lavalink *Lavalink) GetPlayer(guild string) (*Player, error) {
+	p, ok := lavalink.players[guild]
+	if !ok {
+		return nil, errPlayerNotFound
+	}
+	return p, nil
 }
