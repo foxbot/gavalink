@@ -102,9 +102,28 @@ func (node *Node) onEvent(msgType int, msg []byte) error {
 
 	switch m.Op {
 	case opPlayerUpdate:
-		// todo
+		player, err := node.manager.GetPlayer(m.GuildID)
+		if err != nil {
+			return err
+		}
+		player.time = m.State.Time
+		player.position = m.State.Position
 	case opEvent:
-		// todo
+		player, err := node.manager.GetPlayer(m.GuildID)
+		if err != nil {
+			return err
+		}
+
+		switch m.Type {
+		case eventTrackEnd:
+			err = (*player.handler).OnTrackEnd(player, m.Track, m.Reason)
+		case eventTrackException:
+			err = (*player.handler).OnTrackException(player, m.Track, m.Reason)
+		case eventTrackStuck:
+			err = (*player.handler).OnTrackStuck(player, m.Track, m.ThresholdMs)
+		}
+
+		return err
 	default:
 		return errUnknownPayload
 	}
@@ -113,7 +132,10 @@ func (node *Node) onEvent(msgType int, msg []byte) error {
 }
 
 // CreatePlayer creates an audio player on this node
-func (node *Node) CreatePlayer(guildID string, sessionID string, event VoiceServerUpdate) (*Player, error) {
+func (node *Node) CreatePlayer(guildID string, sessionID string, event VoiceServerUpdate, handler *EventHandler) (*Player, error) {
+	if handler == nil {
+		return nil, errNilHandler
+	}
 	msg := message{
 		Op:        opVoiceUpdate,
 		GuildID:   guildID,
@@ -132,6 +154,7 @@ func (node *Node) CreatePlayer(guildID string, sessionID string, event VoiceServ
 		guildID: guildID,
 		manager: node.manager,
 		node:    node,
+		handler: handler,
 	}
 	node.manager.players[guildID] = player
 	return player, nil

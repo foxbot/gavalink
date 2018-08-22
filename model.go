@@ -53,15 +53,18 @@ type TrackInfo struct {
 }
 
 const (
-	opVoiceUpdate  = "voiceUpdate"
-	opPlay         = "play"
-	opStop         = "stop"
-	opPause        = "pause"
-	opSeek         = "seek"
-	opVolume       = "volume"
-	opDestroy      = "destroy"
-	opPlayerUpdate = "playerUpdate"
-	opEvent        = "event"
+	opVoiceUpdate       = "voiceUpdate"
+	opPlay              = "play"
+	opStop              = "stop"
+	opPause             = "pause"
+	opSeek              = "seek"
+	opVolume            = "volume"
+	opDestroy           = "destroy"
+	opPlayerUpdate      = "playerUpdate"
+	opEvent             = "event"
+	eventTrackEnd       = "TrackEndEvent"
+	eventTrackException = "TrackExceptionEvent"
+	eventTrackStuck     = "TrackStuckEvent"
 )
 
 type message struct {

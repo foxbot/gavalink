@@ -22,6 +22,7 @@ var (
 	errVolumeOutOfRange = errors.New("Volume is out of range, must be within [0, 1000]")
 	errInvalidVersion   = errors.New("This library requires Lavalink >= 3")
 	errUnknownPayload   = errors.New("Lavalink sent an unknown payload")
+	errNilHandler       = errors.New("You must provide an event handler. Use gavalink.DummyEventHandler if you wish to ignore events")
 )
 
 // NewLavalink creates a new Lavalink manager

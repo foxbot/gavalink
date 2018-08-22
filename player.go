@@ -9,9 +9,12 @@ import (
 
 // Player is a Lavalink player
 type Player struct {
-	guildID string
-	manager *Lavalink
-	node    *Node
+	guildID  string
+	time     int
+	position int
+	manager  *Lavalink
+	node     *Node
+	handler  *EventHandler
 }
 
 // Play will play the given track completely
