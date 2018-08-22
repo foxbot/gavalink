@@ -14,7 +14,7 @@ type Player struct {
 	position int
 	manager  *Lavalink
 	node     *Node
-	handler  *EventHandler
+	handler  EventHandler
 }
 
 // Play will play the given track completely

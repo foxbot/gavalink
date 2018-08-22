@@ -26,8 +26,13 @@ var (
 )
 
 // NewLavalink creates a new Lavalink manager
-func NewLavalink() *Lavalink {
-	return &Lavalink{}
+func NewLavalink(shards int, userID int) *Lavalink {
+	return &Lavalink{
+		Shards:  shards,
+		UserID:  userID,
+		nodes:   make([]Node, 1),
+		players: make(map[string]*Player),
+	}
 }
 
 // AddNodes adds a node to the Lavalink manager

@@ -116,11 +116,11 @@ func (node *Node) onEvent(msgType int, msg []byte) error {
 
 		switch m.Type {
 		case eventTrackEnd:
-			err = (*player.handler).OnTrackEnd(player, m.Track, m.Reason)
+			err = player.handler.OnTrackEnd(player, m.Track, m.Reason)
 		case eventTrackException:
-			err = (*player.handler).OnTrackException(player, m.Track, m.Reason)
+			err = player.handler.OnTrackException(player, m.Track, m.Reason)
 		case eventTrackStuck:
-			err = (*player.handler).OnTrackStuck(player, m.Track, m.ThresholdMs)
+			err = player.handler.OnTrackStuck(player, m.Track, m.ThresholdMs)
 		}
 
 		return err
@@ -132,10 +132,7 @@ func (node *Node) onEvent(msgType int, msg []byte) error {
 }
 
 // CreatePlayer creates an audio player on this node
-func (node *Node) CreatePlayer(guildID string, sessionID string, event VoiceServerUpdate, handler *EventHandler) (*Player, error) {
-	if handler == nil {
-		return nil, errNilHandler
-	}
+func (node *Node) CreatePlayer(guildID string, sessionID string, event VoiceServerUpdate, handler EventHandler) (*Player, error) {
 	msg := message{
 		Op:        opVoiceUpdate,
 		GuildID:   guildID,
