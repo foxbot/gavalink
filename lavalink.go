@@ -6,10 +6,8 @@ import (
 
 // Lavalink manages a connection to Lavalink Nodes
 type Lavalink struct {
-	// Shards is the total number of shards the bot is running
-	Shards int
-	// UserID is the Discord User ID of the bot
-	UserID int
+	shards string
+	userID string
 
 	nodes   []Node
 	players map[string]*Player
@@ -26,27 +24,31 @@ var (
 )
 
 // NewLavalink creates a new Lavalink manager
-func NewLavalink(shards int, userID int) *Lavalink {
+func NewLavalink(shards string, userID string) *Lavalink {
 	return &Lavalink{
-		Shards:  shards,
-		UserID:  userID,
-		nodes:   make([]Node, 1),
+		shards: shards,
+		userID: userID,
+		/*		nodes:   make([]Node, 1),*/
 		players: make(map[string]*Player),
 	}
 }
 
 // AddNodes adds a node to the Lavalink manager
-func (lavalink *Lavalink) AddNodes(nodeConfigs ...NodeConfig) {
+func (lavalink *Lavalink) AddNodes(nodeConfigs ...NodeConfig) error {
 	nodes := make([]Node, len(nodeConfigs))
 	for i, c := range nodeConfigs {
 		n := Node{
-			config: c,
-			shards: lavalink.Shards,
-			userID: lavalink.UserID,
+			config:  c,
+			manager: lavalink,
+		}
+		err := n.open()
+		if err != nil {
+			return err
 		}
 		nodes[i] = n
 	}
 	lavalink.nodes = append(lavalink.nodes, nodes...)
+	return nil
 }
 
 // RemoveNode removes a node from the manager

@@ -30,8 +30,6 @@ type NodeConfig struct {
 // Node wraps a Lavalink Node
 type Node struct {
 	config  NodeConfig
-	shards  int
-	userID  int
 	manager *Lavalink
 	wsConn  *websocket.Conn
 }
@@ -39,6 +37,8 @@ type Node struct {
 func (node *Node) open() error {
 	header := http.Header{}
 	header.Set("Authorization", node.config.Password)
+	header.Set("Num-Shards", node.manager.shards)
+	header.Set("User-Id", node.manager.userID)
 
 	ws, resp, err := websocket.DefaultDialer.Dial(node.config.WebSocket, header)
 	if err != nil {
@@ -73,6 +73,7 @@ func (node *Node) listen() {
 	for {
 		msgType, msg, err := node.wsConn.ReadMessage()
 		if err != nil {
+			log.Println(err)
 			// try to reconnect
 			oerr := node.open()
 			if oerr != nil {
