@@ -6,6 +6,7 @@
 ## Requirements
 
 - Go 1.10+
+- Lavalink v3+
 
 ## License
 
