@@ -93,7 +93,7 @@ type state struct {
 
 // VoiceServerUpdate is a raw Discord VOICE_SERVER_UPDATE event
 type VoiceServerUpdate struct {
-	GuildID  int    `json:"guild_id"`
+	GuildID  string `json:"guild_id"`
 	Endpoint string `json:"endpoint"`
 	Token    string `json:"token"`
 }
