@@ -62,33 +62,39 @@ const (
 	opDestroy           = "destroy"
 	opPlayerUpdate      = "playerUpdate"
 	opEvent             = "event"
+	opStats             = "stats"
 	eventTrackEnd       = "TrackEndEvent"
 	eventTrackException = "TrackExceptionEvent"
 	eventTrackStuck     = "TrackStuckEvent"
 )
 
 type message struct {
-	Op          string             `json:"op"`
-	GuildID     string             `json:"guildId,omitempty"`
-	SessionID   string             `json:"sessionId,omitempty"`
-	Event       *VoiceServerUpdate `json:"event,omitempty"`
-	Track       string             `json:"track,omitempty"`
-	StartTime   string             `json:"startTime,omitempty"`
-	EndTime     string             `json:"endTime,omitempty"`
-	Pause       bool               `json:"pause,omitempty"`
-	Position    int                `json:"position,omitempty"`
-	Volume      int                `json:"volume,omitempty"`
-	State       *state             `json:"state,omitempty"`
-	Type        string             `json:"type,omitempty"`
-	Reason      string             `json:"reason,omitempty"`
-	Error       string             `json:"error,omitempty"`
-	ThresholdMs int                `json:"thresholdMs,omitempty"`
+	Op          string            `json:"op"`
+	GuildID     string            `json:"guildId,omitempty"`
+	SessionID   string            `json:"sessionId,omitempty"`
+	Event       VoiceServerUpdate `json:"event,omitempty"`
+	Track       string            `json:"track,omitempty"`
+	StartTime   string            `json:"startTime,omitempty"`
+	EndTime     string            `json:"endTime,omitempty"`
+	Pause       bool              `json:"pause,omitempty"`
+	Position    int               `json:"position,omitempty"`
+	Volume      int               `json:"volume,omitempty"`
+	State       state             `json:"state,omitempty"`
+	Type        string            `json:"type,omitempty"`
+	Reason      string            `json:"reason,omitempty"`
+	Error       string            `json:"error,omitempty"`
+	ThresholdMs int               `json:"thresholdMs,omitempty"`
+	StatCPU     statCPU           `json:"cpu,omitempty"`
 	// TODO: stats
 }
 
 type state struct {
 	Time     int `json:"time"`
 	Position int `json:"position"`
+}
+
+type statCPU struct {
+	Load float32 `json:"lavalinkLoad"`
 }
 
 // VoiceServerUpdate is a raw Discord VOICE_SERVER_UPDATE event

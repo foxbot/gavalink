@@ -4,13 +4,14 @@ import (
 	"errors"
 	"log"
 	"os"
+	"sort"
 )
 
 // Log sets the log.Logger gavalink will write to
 var Log *log.Logger
 
 func init() {
-	Log = log.New(os.Stdout, "(gavalink)", 0)
+	Log = log.New(os.Stdout, "(gavalink) ", 0)
 }
 
 // Lavalink manages a connection to Lavalink Nodes
@@ -91,7 +92,11 @@ func (lavalink *Lavalink) BestNode() (*Node, error) {
 	if len(lavalink.nodes) < 1 {
 		return nil, errNoNodes
 	}
-	// TODO: lookup latency
+
+	sort.SliceStable(lavalink.nodes, func(i, j int) bool {
+		return lavalink.nodes[i].load < lavalink.nodes[j].load
+	})
+
 	return &lavalink.nodes[0], nil
 }
 

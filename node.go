@@ -29,6 +29,7 @@ type NodeConfig struct {
 // Node wraps a Lavalink Node
 type Node struct {
 	config  NodeConfig
+	load    float32
 	manager *Lavalink
 	wsConn  *websocket.Conn
 }
@@ -84,8 +85,11 @@ func (node *Node) listen() {
 			return
 		}
 		err = node.onEvent(msgType, msg)
-		// TODO: better error handling
-		Log.Println(err)
+		// TODO: better error handling?
+
+		if err != nil {
+			Log.Println(err)
+		}
 	}
 }
 
@@ -124,6 +128,9 @@ func (node *Node) onEvent(msgType int, msg []byte) error {
 		}
 
 		return err
+	case opStats:
+		node.load = m.StatCPU.Load
+		Log.Println("dbg-node", node.config.WebSocket, "load", node.load)
 	default:
 		return errUnknownPayload
 	}
@@ -137,7 +144,7 @@ func (node *Node) CreatePlayer(guildID string, sessionID string, event VoiceServ
 		Op:        opVoiceUpdate,
 		GuildID:   guildID,
 		SessionID: sessionID,
-		Event:     &event,
+		Event:     event,
 	}
 	data, err := json.Marshal(msg)
 	if err != nil {
