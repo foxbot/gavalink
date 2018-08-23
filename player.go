@@ -12,6 +12,7 @@ type Player struct {
 	guildID  string
 	time     int
 	position int
+	paused   bool
 	manager  *Lavalink
 	node     *Node
 	handler  EventHandler
@@ -60,6 +61,7 @@ func (player *Player) Stop() error {
 
 // Pause will pause or resume the player, depending on the pause parameter
 func (player *Player) Pause(pause bool) error {
+	player.paused = pause
 	msg := message{
 		Op:      opPause,
 		GuildID: player.guildID,
@@ -71,6 +73,11 @@ func (player *Player) Pause(pause bool) error {
 	}
 	err = player.node.wsConn.WriteMessage(websocket.TextMessage, data)
 	return err
+}
+
+// Paused returns whether or not the player is currently paused
+func (player *Player) Paused() bool {
+	return player.paused
 }
 
 // Seek will seek the player to the speicifed position, in millis
@@ -86,6 +93,11 @@ func (player *Player) Seek(position int) error {
 	}
 	err = player.node.wsConn.WriteMessage(websocket.TextMessage, data)
 	return err
+}
+
+// Position returns the player's position, as reported by Lavalink
+func (player *Player) Position() int {
+	return player.position
 }
 
 // Volume will set the player's volume to the specified value
