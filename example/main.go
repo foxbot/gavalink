@@ -5,12 +5,12 @@ import (
 	"log"
 	"os"
 	"os/signal"
-	"strconv"
 	"syscall"
 
 	"github.com/foxbot/gavalink"
 
-	"github.com/bwmarrin/discordgo"
+	// this requires the "feature/manual-voice-connection branch!!"
+	"github.com/foxbot/discordgo"
 )
 
 var token string
@@ -33,6 +33,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	dg.SyncEvents = false
 
 	dg.AddHandler(ready)
 	dg.AddHandler(messageCreate)
@@ -87,7 +88,7 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		for _, vs := range g.VoiceStates {
 			if vs.UserID == m.Author.ID {
 				log.Println("trying to connect to channel")
-				_, err := s.ChannelVoiceJoin(c.GuildID, vs.ChannelID, false, false)
+				err = s.ChannelVoiceJoinManual(c.GuildID, vs.ChannelID, false, false)
 				if err != nil {
 					log.Println(err)
 				} else {
@@ -125,10 +126,9 @@ func voiceServerUpdate(s *discordgo.Session, event *discordgo.VoiceServerUpdate)
 		return
 	}
 
-	gid, _ := strconv.Atoi(event.GuildID)
 	vsu := gavalink.VoiceServerUpdate{
 		Endpoint: event.Endpoint,
-		GuildID:  gid,
+		GuildID:  event.GuildID,
 		Token:    event.Token,
 	}
 	handler := new(gavalink.DummyEventHandler)
@@ -137,6 +137,4 @@ func voiceServerUpdate(s *discordgo.Session, event *discordgo.VoiceServerUpdate)
 		log.Println(err)
 		return
 	}
-
-	panic("discordgo: cancel event")
 }

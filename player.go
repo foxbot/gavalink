@@ -31,6 +31,7 @@ func (player *Player) PlayAt(track string, startTime int, endTime int) error {
 
 	msg := message{
 		Op:        opPlay,
+		GuildID:   player.guildID,
 		Track:     track,
 		StartTime: start,
 		EndTime:   end,
