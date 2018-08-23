@@ -2,7 +2,16 @@ package gavalink
 
 import (
 	"errors"
+	"log"
+	"os"
 )
+
+// Log sets the log.Logger gavalink will write to
+var Log *log.Logger
+
+func init() {
+	Log = log.New(os.Stdout, "(gavalink)", 0)
+}
 
 // Lavalink manages a connection to Lavalink Nodes
 type Lavalink struct {
@@ -52,7 +61,7 @@ func (lavalink *Lavalink) AddNodes(nodeConfigs ...NodeConfig) error {
 }
 
 // RemoveNode removes a node from the manager
-func (lavalink *Lavalink) RemoveNode(node *Node) error {
+func (lavalink *Lavalink) removeNode(node *Node) error {
 	idx := -1
 	for i, n := range lavalink.nodes {
 		if n == *node {

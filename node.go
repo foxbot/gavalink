@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"strconv"
 
@@ -56,7 +55,7 @@ func (node *Node) open() error {
 	node.wsConn = ws
 	go node.listen()
 
-	log.Println("node", node.config.WebSocket, "opened")
+	Log.Println("node", node.config.WebSocket, "opened")
 
 	return nil
 }
@@ -73,20 +72,20 @@ func (node *Node) listen() {
 	for {
 		msgType, msg, err := node.wsConn.ReadMessage()
 		if err != nil {
-			log.Println(err)
+			Log.Println(err)
 			// try to reconnect
 			oerr := node.open()
 			if oerr != nil {
-				log.Println("node", node.config.WebSocket, "failed and could not reconnect, destroying.", err, oerr)
-				node.manager.RemoveNode(node)
+				Log.Println("node", node.config.WebSocket, "failed and could not reconnect, destroying.", err, oerr)
+				node.manager.removeNode(node)
 				return
 			}
-			log.Println("node", node.config.WebSocket, "reconnected")
+			Log.Println("node", node.config.WebSocket, "reconnected")
 			return
 		}
 		err = node.onEvent(msgType, msg)
 		// TODO: better error handling
-		log.Println(err)
+		Log.Println(err)
 	}
 }
 
