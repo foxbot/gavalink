@@ -121,6 +121,29 @@ func (player *Player) Volume(volume int) error {
 	return err
 }
 
+// Forward will forward a new VOICE_SERVER_UPDATE to a Lavalink node for
+// this player.
+//
+// This should always be used if a VOICE_SERVER_UPDATE is received for
+// a guild which already has a player.
+//
+// To move a player to a new Node, first player.Destroy() it, and then
+// create a new player on the new node.
+func (player *Player) Forward(sessionID string, event VoiceServerUpdate) error {
+	msg := message{
+		Op:        opVoiceUpdate,
+		GuildID:   player.guildID,
+		SessionID: sessionID,
+		Event:     event,
+	}
+	data, err := json.Marshal(msg)
+	if err != nil {
+		return err
+	}
+	err = player.node.wsConn.WriteMessage(websocket.TextMessage, data)
+	return err
+}
+
 // Destroy will destroy this player
 func (player *Player) Destroy() error {
 	msg := message{
