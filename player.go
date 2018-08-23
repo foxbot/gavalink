@@ -134,7 +134,7 @@ func (player *Player) Forward(sessionID string, event VoiceServerUpdate) error {
 		Op:        opVoiceUpdate,
 		GuildID:   player.guildID,
 		SessionID: sessionID,
-		Event:     event,
+		Event:     &event,
 	}
 	data, err := json.Marshal(msg)
 	if err != nil {

@@ -144,7 +144,7 @@ func (node *Node) CreatePlayer(guildID string, sessionID string, event VoiceServ
 		Op:        opVoiceUpdate,
 		GuildID:   guildID,
 		SessionID: sessionID,
-		Event:     event,
+		Event:     &event,
 	}
 	data, err := json.Marshal(msg)
 	if err != nil {
