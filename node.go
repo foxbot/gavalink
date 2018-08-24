@@ -130,7 +130,6 @@ func (node *Node) onEvent(msgType int, msg []byte) error {
 		return err
 	case opStats:
 		node.load = m.StatCPU.Load
-		Log.Println("dbg-node", node.config.WebSocket, "load", node.load)
 	default:
 		return errUnknownPayload
 	}
