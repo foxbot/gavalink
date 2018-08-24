@@ -5,6 +5,8 @@ import (
 	"log"
 	"os"
 	"os/signal"
+	"strconv"
+	"strings"
 	"syscall"
 
 	"github.com/foxbot/gavalink"
@@ -96,13 +98,14 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 				}
 			}
 		}
-	} else if m.Content == "~>>playtest" {
+	} else if strings.HasPrefix(m.Content, "~>>play") {
+		query := m.Content[8:]
 		node, err := lavalink.BestNode()
 		if err != nil {
 			log.Println(err)
 			return
 		}
-		tracks, err := node.LoadTracks("https://www.youtube.com/watch?v=Wl2Q_MceIUc")
+		tracks, err := node.LoadTracks(query)
 		if err != nil {
 			log.Println(err)
 			return
@@ -115,22 +118,52 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		if err != nil {
 			log.Println(err)
 		}
+	} else if m.Content == "~>>stop" {
+		err := player.Stop()
+		if err != nil {
+			log.Println(err)
+		}
+	} else if m.Content == "~>>pause" {
+		err := player.Pause(!player.Paused())
+		if err != nil {
+			log.Println(err)
+		}
+	} else if strings.HasPrefix(m.Content, "~>>volume") {
+		query := m.Content[10:]
+		vol, err := strconv.Atoi(query)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+		err = player.Volume(vol)
+		if err != nil {
+			log.Println(err)
+		}
 	}
 }
 
 func voiceServerUpdate(s *discordgo.Session, event *discordgo.VoiceServerUpdate) {
 	log.Println("received VSU")
+	vsu := gavalink.VoiceServerUpdate{
+		Endpoint: event.Endpoint,
+		GuildID:  event.GuildID,
+		Token:    event.Token,
+	}
+
+	if p, err := lavalink.GetPlayer(event.GuildID); err == nil {
+		err = p.Forward(s.State.SessionID, vsu)
+		if err != nil {
+			log.Println(err)
+		}
+		return
+	}
+
 	node, err := lavalink.BestNode()
 	if err != nil {
 		log.Println(err)
 		return
 	}
 
-	vsu := gavalink.VoiceServerUpdate{
-		Endpoint: event.Endpoint,
-		GuildID:  event.GuildID,
-		Token:    event.Token,
-	}
 	handler := new(gavalink.DummyEventHandler)
 	player, err = node.CreatePlayer(event.GuildID, s.State.SessionID, vsu, handler)
 	if err != nil {
