@@ -65,7 +65,7 @@ func (player *Player) Pause(pause bool) error {
 	msg := message{
 		Op:      opPause,
 		GuildID: player.guildID,
-		Pause:   pause,
+		Pause:   &pause,
 	}
 	data, err := json.Marshal(msg)
 	if err != nil {
@@ -85,7 +85,7 @@ func (player *Player) Seek(position int) error {
 	msg := message{
 		Op:       opSeek,
 		GuildID:  player.guildID,
-		Position: position,
+		Position: &position,
 	}
 	data, err := json.Marshal(msg)
 	if err != nil {
@@ -111,7 +111,7 @@ func (player *Player) Volume(volume int) error {
 	msg := message{
 		Op:      opVolume,
 		GuildID: player.guildID,
-		Volume:  volume,
+		Volume:  &volume,
 	}
 	data, err := json.Marshal(msg)
 	if err != nil {

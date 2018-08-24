@@ -76,9 +76,9 @@ type message struct {
 	Track       string             `json:"track,omitempty"`
 	StartTime   string             `json:"startTime,omitempty"`
 	EndTime     string             `json:"endTime,omitempty"`
-	Pause       bool               `json:"pause,omitempty"`
-	Position    int                `json:"position,omitempty"`
-	Volume      int                `json:"volume,omitempty"`
+	Pause       *bool              `json:"pause,omitempty"`
+	Position    *int               `json:"position,omitempty"`
+	Volume      *int               `json:"volume,omitempty"`
 	State       *state             `json:"state,omitempty"`
 	Type        string             `json:"type,omitempty"`
 	Reason      string             `json:"reason,omitempty"`
