@@ -27,6 +27,8 @@ func (player *Player) Play(track string) error {
 //
 // Setting a time to 0 will omit it.
 func (player *Player) PlayAt(track string, startTime int, endTime int) error {
+	player.paused = false
+
 	start := strconv.Itoa(startTime)
 	end := strconv.Itoa(endTime)
 
@@ -62,6 +64,7 @@ func (player *Player) Stop() error {
 // Pause will pause or resume the player, depending on the pause parameter
 func (player *Player) Pause(pause bool) error {
 	player.paused = pause
+
 	msg := message{
 		Op:      opPause,
 		GuildID: player.guildID,
