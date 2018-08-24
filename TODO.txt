@@ -1,3 +1,2 @@
-- pause state should be reset on a play command
 - match node balancing against lavalink-client's
     https://github.com/FredBoat/Lavalink-Client/blob/master/src/main/java/lavalink/client/io/LavalinkLoadBalancer.java#L121-L146
