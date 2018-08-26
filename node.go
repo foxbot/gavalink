@@ -158,6 +158,7 @@ func (node *Node) CreatePlayer(guildID string, sessionID string, event VoiceServ
 		manager: node.manager,
 		node:    node,
 		handler: handler,
+		vol:     100,
 	}
 	node.manager.players[guildID] = player
 	return player, nil

@@ -13,6 +13,7 @@ type Player struct {
 	time     int
 	position int
 	paused   bool
+	vol      int
 	manager  *Lavalink
 	node     *Node
 	handler  EventHandler
@@ -111,6 +112,8 @@ func (player *Player) Volume(volume int) error {
 		return errVolumeOutOfRange
 	}
 
+	player.vol = volume
+
 	msg := message{
 		Op:      opVolume,
 		GuildID: player.guildID,
@@ -122,6 +125,11 @@ func (player *Player) Volume(volume int) error {
 	}
 	err = player.node.wsConn.WriteMessage(websocket.TextMessage, data)
 	return err
+}
+
+// GetVolume gets the player's volume level
+func (player *Player) GetVolume() int {
+	return player.vol
 }
 
 // Forward will forward a new VOICE_SERVER_UPDATE to a Lavalink node for
