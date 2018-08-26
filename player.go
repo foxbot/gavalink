@@ -14,9 +14,15 @@ type Player struct {
 	position int
 	paused   bool
 	vol      int
+	track    string
 	manager  *Lavalink
 	node     *Node
 	handler  EventHandler
+}
+
+// GuildID returns this player's Guild ID
+func (player *Player) GuildID() string {
+	return player.guildID
 }
 
 // Play will play the given track completely
@@ -29,6 +35,7 @@ func (player *Player) Play(track string) error {
 // Setting a time to 0 will omit it.
 func (player *Player) PlayAt(track string, startTime int, endTime int) error {
 	player.paused = false
+	player.track = track
 
 	start := strconv.Itoa(startTime)
 	end := strconv.Itoa(endTime)
@@ -48,8 +55,14 @@ func (player *Player) PlayAt(track string, startTime int, endTime int) error {
 	return err
 }
 
+// Track returns the player's current track
+func (player *Player) Track() string {
+	return player.track
+}
+
 // Stop will stop the currently playing track
 func (player *Player) Stop() error {
+	player.track = ""
 	msg := message{
 		Op:      opStop,
 		GuildID: player.guildID,

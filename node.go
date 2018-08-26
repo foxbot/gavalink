@@ -120,6 +120,7 @@ func (node *Node) onEvent(msgType int, msg []byte) error {
 
 		switch m.Type {
 		case eventTrackEnd:
+			player.track = ""
 			err = player.handler.OnTrackEnd(player, m.Track, m.Reason)
 		case eventTrackException:
 			err = player.handler.OnTrackException(player, m.Track, m.Reason)
