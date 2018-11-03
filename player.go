@@ -182,6 +182,6 @@ func (player *Player) Destroy() error {
 	if err != nil {
 		return err
 	}
-	player.manager.players[player.guildID] = nil
+	delete(player.manager.players, player.guildID)
 	return nil
 }
