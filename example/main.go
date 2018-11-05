@@ -9,10 +9,8 @@ import (
 	"strings"
 	"syscall"
 
+	"github.com/bwmarrin/discordgo"
 	"github.com/foxbot/gavalink"
-
-	// this requires the "feature/manual-voice-connection branch!!"
-	"github.com/foxbot/discordgo"
 )
 
 var token string
