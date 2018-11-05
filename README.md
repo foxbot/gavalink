@@ -1,5 +1,6 @@
 # gavalink
 [![](https://godoc.org/github.com/foxbot/gavalink?status.svg)](http://godoc.org/github.com/foxbot/gavalink)
+[![Build Status](https://travis-ci.com/foxbot/gavalink.svg?branch=master)](https://travis-ci.com/foxbot/gavalink)
 
 [lavalink] wrapper for Go
 
