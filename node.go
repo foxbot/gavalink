@@ -44,7 +44,7 @@ func (node *Node) open() error {
 	if err != nil {
 		return err
 	}
-	vstr := resp.Header.Get("Lavalink-Major-Version")
+	vstr := resp.Header.Get("Lavalink-Api-Version")
 	v, err := strconv.Atoi(vstr)
 	if err != nil {
 		return err
